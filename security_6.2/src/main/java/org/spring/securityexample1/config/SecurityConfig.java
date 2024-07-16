@@ -7,6 +7,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,16 +42,16 @@ public class SecurityConfig {
 				.requestMatchers("/admin").hasRole("ADMIN")
 				// "/**" 는 {id} 같은거 의미, hasAnyRole 은 여러 역할 처리함, 그리고 hasAnyRole 을 하면 접미사에 'ROLE_' 을 붙여준다.
 				.requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
-				// anyRequest 는 나머지 처리 경로를 다 처리하게 한다.
+				// anyRequest 는 등록되지 않은 나머지 경로를 다 처리한다.
 				.anyRequest().authenticated()
 			);
 
-/*		http
+		http
 			.formLogin((auth) -> auth
 				.loginPage("/login") // 우리가 Custom 한 로그인 페이지 경로를 적는다, 자동으로 redirection 을 해준다.
 				.loginProcessingUrl("/loginProc") // html 로그인 id,password 를 특정한 경로로 보낸다 -> Post 방식임.
 				.permitAll()
-			);*/
+			);
 
 		http
 			.logout((auth) -> auth
@@ -59,7 +60,7 @@ public class SecurityConfig {
 			);
 		// CSRF 설정, Post 요청시 csrf 토큰도 보내줘야 로그인이 됨.
 		http
-			.csrf((auth) -> auth.disable()
+			.csrf(AbstractHttpConfigurer::disable
 			);
 
 		// 세션 관리 설정
