@@ -1,0 +1,38 @@
+server:
+  port: 8000
+  # 세션 소멸 시간 설정
+  servlet:
+    session:
+      timeout: 60m
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/securityEx1?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+
+  thymeleaf:
+      check-template-location: true
+      prefix: classpath:/templates/   # .html ??? ???? ?? ?? ??(src/main/resources/templates)
+      suffix: .html
+
+jwt:
+  secret:
+    key: abcdefghijklmnopqrstuvwxyz12345667891011121314151617181920 # ?? ????
+  access-token:
+    plus-hour: 6
+  refresh-token:
+    plus-hour: 12
