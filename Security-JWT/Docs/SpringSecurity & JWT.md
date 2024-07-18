@@ -42,3 +42,99 @@ public class SecurityConfig {
 }
 
 ```
+
+### Entity & Repository
+```java
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+}
+
+@Builder
+@AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @ToString
+@Entity
+public class UserEntity {
+
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String LoginId;
+	private String password;
+
+	@Column(columnDefinition = "varchar(20)")
+	@Enumerated(EnumType.STRING)
+	private Role role;
+}
+```
+
+편의를 위해 Getter,Setter 및 생성자,빌더 롬복을 사용했습니다 <br>
+
+### 회원가입
+```java
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+	Boolean existsByLoginId(String loginId);
+}
+```
+```java
+@Builder
+@Getter @Setter
+public class RegisterDTO {
+
+	private String loginId;
+	private String password;
+	private Role role;
+	private LocalDateTime createdAt;
+}
+```
+```java
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Service
+public class RegisterService {
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder passwordEncoder;
+
+	@Transactional
+	public RegisterDTO register(RegisterDTO registerDTO) {
+		String loginId = registerDTO.getLoginId();
+		String password = registerDTO.getPassword();
+
+		Boolean isExist = userRepository.existsByLoginId(loginId);
+
+		if(isExist) {
+			throw new RuntimeException("동일한 ID가 존재합니다");
+		}
+
+		UserEntity user = new UserEntity();
+		user.setLoginId(loginId);
+		user.setPassword(passwordEncoder.encode(password));
+		user.setRole(Role.USER);
+		user.setCreateAt(LocalDateTime.now());
+		user.setUpdateAt(LocalDateTime.now());
+
+		userRepository.save(user);
+
+		return RegisterDTO.builder()
+			.loginId(user.getLoginId())
+			.password(user.getPassword())
+			.role(user.getRole())
+			.createdAt(user.getCreateAt())
+			.build();
+
+	}
+}
+
+```
+```java
+@RequiredArgsConstructor
+@RequestMapping("/api")
+@RestController
+public class RegisterController {
+	private final RegisterService registerService;
+
+	@PostMapping("/register")
+	public ResponseEntity<RegisterDTO> joinProcess(@RequestBody RegisterDTO registerDTO) {
+		RegisterDTO register = registerService.register(registerDTO);
+		return ResponseEntity.ok(register);
+	}
+}
+```
