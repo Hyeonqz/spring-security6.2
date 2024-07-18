@@ -20,11 +20,6 @@ spring:
     username: root
     password: 1234
 
-  thymeleaf:
-    check-template-location: true
-    prefix: classpath:/templates/
-    suffix: .html
-
 jwt:
   secret:
     key: abcdefghijklmnopqrstuvwxyz12345667891011121314151617181920 # ?? ????
