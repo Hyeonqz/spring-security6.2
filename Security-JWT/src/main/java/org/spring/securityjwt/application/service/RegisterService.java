@@ -21,26 +21,25 @@ public class RegisterService {
 
 	@Transactional
 	public RegisterDTO register(RegisterDTO registerDTO) {
-		String loginId = registerDTO.getLoginId();
+		String loginId = registerDTO.getUsername();
 		String password = registerDTO.getPassword();
 
-		Boolean isExist = userRepository.existsByLoginId(loginId);
+		Boolean isExist = userRepository.existsByUsername(loginId);
 
 		if(isExist) {
 			throw new RuntimeException("동일한 ID가 존재합니다");
 		}
 
 		UserEntity user = new UserEntity();
-		user.setLoginId(loginId);
+		user.setUsername(loginId);
 		user.setPassword(passwordEncoder.encode(password));
 		user.setRole(Role.USER);
 		user.setCreateAt(LocalDateTime.now());
-		user.setUpdateAt(LocalDateTime.now());
 
 		userRepository.save(user);
 
 		return RegisterDTO.builder()
-			.loginId(user.getLoginId())
+			.username(user.getUsername())
 			.password(user.getPassword())
 			.role(user.getRole())
 			.build();

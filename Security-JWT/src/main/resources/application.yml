@@ -20,10 +20,12 @@ spring:
     username: root
     password: 1234
 
-jwt:
-  secret:
-    key: abcdefghijklmnopqrstuvwxyz12345667891011121314151617181920 # ?? ????
-  access-token:
-    plus-hour: 6
-  refresh-token:
-    plus-hour: 12
+  jwt:
+    secret:
+      key: abcdefghijklmnopqrstuvwxyzjinhyeonkyu990510naverpayletsgogo
+
+# logging:
+#  level:
+#    org:
+#      springframework:
+#        security: DEBUG

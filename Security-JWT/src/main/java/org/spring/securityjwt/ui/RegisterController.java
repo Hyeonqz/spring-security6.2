@@ -21,4 +21,5 @@ public class RegisterController {
 		RegisterDTO register = registerService.register(registerDTO);
 		return ResponseEntity.ok(register);
 	}
+
 }

@@ -31,7 +31,7 @@ public class UserEntity {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String loginId;
+	private String username;
 	private String password;
 
 	@Column(columnDefinition = "varchar(20)")
@@ -40,8 +40,5 @@ public class UserEntity {
 
 	@CreatedDate
 	private LocalDateTime createAt;
-
-	@LastModifiedDate
-	private LocalDateTime updateAt;
 
 }
