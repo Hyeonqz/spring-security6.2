@@ -42,6 +42,7 @@ SpringBoot + SpringSecurity 를 이용하여 JWT 방식으로 인증/인가(=로
 - SpringSecurity6.3
 - SpringDataJPA
 - MySQL
+- Redis
 
 <br>
 
